@@ -1,14 +1,22 @@
-getwd()
-list.files()
-df<-read.csv("income.csv", stringsAsFactors=FALSE)
-summary(df)
-names(df)<-c("ID","CSD", "income", "growth")
-df3<-subset(df, ID==3)
-df2<-subset(df, ID==2)
-summary(df3, df2)
+install.packages("leaflet")
+library(leaflet)
+locations<-read.csv("locations.csv")
+names(locations)<-c("region","name", "lat", "long", "mdn_age", "below_15", "post_sec")
 
-plot(density(df3$income, na.rm = T))
-plot(density(df2$income, na.rm = T))
-plot()
-summary("df$income")
-boxplot(income~ID, data = df, main="incm data", xlab="location", ylab="incm")
+below_15<-tail(locations[ order(locations[,"below_15"]),], n=7)
+post_sec<-head(locations[ order(locations[,"post_sec"], locations[,"name"]),], n=7)
+mdn_age <-subset(locations,mdn_age>35 & mdn_age<45)
+
+leaflet(data = locations[c(1:30),]) %>% addTiles() %>%
+  addMarkers(~long, ~lat, popup = ~as.character(name))
+
+leaflet(data = below_15[c(1:7),]) %>% addTiles() %>%
+  addMarkers(~long, ~lat, popup = ~as.character(name))
+
+leaflet(data = post_sec[c(1:7),]) %>% addTiles() %>%
+  addMarkers(~long, ~lat, popup = ~as.character(name))
+
+leaflet(data = mdn_age[c(1:16),]) %>% addTiles() %>%
+  addMarkers(~long, ~lat, popup = ~as.character(name))
+
+#Batch geocoder: http://www.mapdevelopers.com/batch_geocode_tool.php
