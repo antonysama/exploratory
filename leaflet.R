@@ -2,21 +2,36 @@ install.packages("leaflet")
 library(leaflet)
 locations<-read.csv("locations.csv", stringsAsFactors=FALSE)
 locations<-locations[c(1:10,12)] #deleted no. of building permits
-
+ summary(locations)
 #renames columns
 names(locations)<-c("region","name", "lat", "long", 
                     "mdn_age", "below_15", 
                     "post_sec", "income", "growth", "buildings",
                     "projects") 
+
+#creates an index 
+locations<-locations; seq(along=locations)
+row.names(locations) <- seq_len(nrow(df)) - 1
+
 #selects locatons with na's
 na_post_sec<-locations[which(is.na(locations$post_sec)), 1:2] 
 na_income<-locations[which(is.na(locations$income)), 1:2]
 
 #orders indicators of interest
-below_15<-tail(locations[ order(locations[,"below_15"]),], n=7)
-post_sec<-head(locations[ order(locations[,"post_sec"], 
+below_15_tail<-tail(locations[ order(locations[,"below_15"]),], n=7)
+below_15_head<-head(locations[ order(locations[,"below_15"]),], n=7)
+post_sec_head<-head(locations[ order(locations[,"post_sec"], 
                                 locations[,"name"]),], n=7)
+new_locations<-na.omit(locations[c(1:7)])
+post_sec_tail<-tail(new_locations[ order(new_locations[,"post_sec"], 
+                                     new_locations[,"name"]),], n=7)
 mdn_age <-subset(locations,mdn_age>35 & mdn_age<45)
+rvs_mdn_age <-subset(locations,mdn_age<35 | mdn_age>45)
+
+income<-head(locations[ order(locations[,"income"]),], n=7)
+growth<-head(locations[ order(locations[,"growth"]),], n=7)
+
+
 income<-head(locations[ order(locations[,"income"]),], n=7)
 growth<-head(locations[ order(locations[,"growth"]),], n=7)
 
@@ -24,19 +39,22 @@ growth<-head(locations[ order(locations[,"growth"]),], n=7)
 leaflet(data = locations[c(1:30),]) %>% addTiles() %>%
   addMarkers(~long, ~lat, popup = ~as.character(name))
 
-leaflet(data = below_15[c(1:7),]) %>% addTiles() %>%
+leaflet(data = below_15_head[c(1:7),]) %>% addTiles() %>%
   addMarkers(~long, ~lat, popup = ~as.character(name))
 
-leaflet(data = post_sec[c(1:7),]) %>% addTiles() %>%
+leaflet(data = below_15_tail[c(1:7),]) %>% addTiles() %>%
+  addMarkers(~long, ~lat, popup = ~as.character(name))
+
+leaflet(data = post_sec_head[c(1:7),]) %>% addTiles() %>%
+  addMarkers(~long, ~lat, popup = ~as.character(name))
+
+leaflet(data = post_sec_tail[c(1:7),]) %>% addTiles() %>%
   addMarkers(~long, ~lat, popup = ~as.character(name))
 
 leaflet(data = mdn_age[c(1:16),]) %>% addTiles() %>%
   addMarkers(~long, ~lat, popup = ~as.character(name))
 
-leaflet(data = income[c(1:7),]) %>% addTiles() %>%
-  addMarkers(~long, ~lat, popup = ~as.character(name))
-
-leaflet(data = growth[c(1:7),]) %>% addTiles() %>%
+leaflet(data = rvs_mdn_age[c(1:16),]) %>% addTiles() %>%
   addMarkers(~long, ~lat, popup = ~as.character(name))
 
 #subseets regions
