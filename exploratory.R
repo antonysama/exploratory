@@ -1,12 +1,8 @@
-getwd()
-list.files()
-df<-read.csv("income.csv", stringsAsFactors=FALSE)
-summary(df)
-names(df)<-c("ID","CSD", "income", "growth")
-df3<-subset(df, ID==3)
-df2<-subset(df, ID==2)
-summary(df3, df2)
+# to count the number of times (FREQ) a value "x" appears in the vector.
+numbers <- c(4,23,4,23...)
+as.data.frame(table(numbers))
 
+#Density plots
 plot(density(df3$income, na.rm = T))
 plot(density(df2$income, na.rm = T))
 plot()
