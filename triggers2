@@ -1,0 +1,48 @@
+	Code	Town	Municipality	KM1.Result	KM2.Result	KM3.Result	KM4.Result	KM5.Result	KM.6.Result	KM.7.Result	KM8.Result	KM9.Result	KM10.Result	Sum
+					2	1	0	0	3	16	16	4	3	
+2	15	County of Barrhead	"BARRHEAD NO. 11, COUNTY OF"	No	No	No	No	No	No	No	No	No	No	0
+3	16	Town of Bashaw 	BASHAW	No	No	No	No	No	No	Yes	No	No	Yes	1
+4	47	Town of Calmar	CALMAR	No	No	No	No	No	No	Yes	No	No	No	1
+5	53	Cardston County	CARDSTON COUNTY	No	No	No	No	No	No	No	Yes	No	No	1
+6	60	Village of Cereal 	CEREAL	No	No	No	No	No	Yes	No	Yes	No	No	2
+7	73	Village of Consort 	CONSORT	No	Yes	No	No	No	No	No	No	No	No	1
+8	76	Village of Coutts	COUTTS	No	No	No	No	No	No	Yes	Yes	No	No	2
+9	82	Town of Daysland 	DAYSLAND	No	No	No	No	No	No	Yes	No	No	Yes	1
+10	99	Village of Spring Lake	SPRING LAKE	No	No	No	No	No	No	No	No	No	No	0
+11	110	Flagstaff county	FLAGSTAFF COUNTY	No	No	Yes	No	No	No	No	Yes	No	No	2
+12	113	Village of Forestburg 	FORESTBURG	No	No	No	No	No	No	Yes	Yes	No	No	2
+13	121	Village of Gadsby 	GADSBY	No	No	No	No	No	Yes	Yes	Yes	No	No	3
+14	124	Town of Gibbons 	GIBBONS	No	No	No	No	No	No	No	No	No	No	0
+15	131	Town of Grande Cache	GRANDE CACHE	No	No	No	No	No	No	Yes	No	No	Yes	1
+16	133	County of Grande Prairie No. 1	"GRANDE PRAIRIE NO. 1, COUNTY OF"	No	No	No	No	No	No	No	No	No	No	0
+17	140	Village of Halkirk 	HALKIRK	No	No	No	No	No	No	Yes	Yes	No	No	2
+18	141	Town of Hanna	HANNA	No	No	No	No	No	No	No	Yes	No	No	1
+19	143	Town of Hardisty 	HARDISTY	No	No	No	No	No	No	Yes	Yes	No	No	2
+20	151	Town of Hinton	HINTON	No	No	No	No	No	No	No	No	No	No	0
+21	188	Town of Killam 	KILLAM	No	No	No	No	No	No	No	Yes	Yes	No	2
+22	190	Village of Kitscoty 	KITSCOTY	No	No	No	No	No	No	Yes	No	No	No	1
+23	193	Lac Ste. Anne County	LAC STE. ANNE COUNTY	No	No	No	No	No	No	No	No	No	No	0
+24	201	Leduc County	LEDUC COUNTY	No	No	No	No	No	No	No	No	Yes	No	1
+25	208	Village of Longview	LONGVIEW	No	No	No	No	No	No	Yes	No	No	No	1
+26	224	Town of Morinville	MORINVILLE	No	No	No	No	No	No	Yes	No	No	No	1
+27	241	Town of Oyen 	OYEN	No	No	No	No	No	No	No	No	No	No	0
+28	243	County of Paintearth No. 18	"PAINTEARTH NO. 18, COUNTY OF"	No	No	No	No	No	No	No	Yes	No	No	1
+29	245	Parkland County	PARKLAND COUNTY	No	No	No	No	No	No	No	No	No	No	0
+30	257	Town of Provost	PROVOST	No	No	No	No	No	No	No	No	No	No	0
+31	265	Town of Redwater	REDWATER	No	No	No	No	No	No	No	No	No	No	0
+32	280	Town of Sedgewick 	SEDGEWICK	No	No	No	No	No	No	No	Yes	No	No	1
+33	291	City of Spruce Grove	SPRUCE GROVE	No	Yes	No	No	No	No	No	No	No	No	1
+34	299	Stettler County No. 6 	"STETTLER NO. 6, COUNTY OF"	No	No	No	No	No	No	No	Yes	No	No	1
+35	301	Town of Stony Plain	STONY PLAIN	No	No	No	No	No	No	No	No	No	No	0
+36	305	Sturgeon County	STURGEON COUNTY	No	No	No	No	No	No	No	No	No	No	0
+37	314	Thorhild County	THORHILD COUNTY	No	No	No	No	No	No	No	No	Yes	No	1
+38	335	Town of Wainwright	WAINWRIGHT	No	No	No	No	No	No	No	No	No	No	0
+39	353	MD of Willow Creek	"WILLOW CREEK NO. 26, M.D. OF"	No	No	No	No	No	No	No	No	No	No	0
+40	355	Village of Youngstown 	YOUNGSTOWN	No	No	No	No	No	No	Yes	Yes	No	No	2
+41	364	Village of Wabamun	WABAMUN	No	No	No	No	No	Yes	Yes	No	No	No	2
+42	383	Brazeau County	BRAZEAU COUNTY	No	No	No	No	No	No	No	No	No	No	0
+43	480	Woodlands County	WOODLANDS COUNTY	No	No	No	No	No	No	No	No	No	No	0
+44	482	Yellowhead County	YELLOWHEAD COUNTY	No	No	No	No	No	No	No	No	Yes	No	1
+45	503	Saddle Hills County	SADDLE HILLS COUNTY	No	No	No	No	No	No	No	Yes	No	No	1
+46	532	Town of Drumheller 	DRUMHELLER	No	No	No	No	No	No	Yes	No	No	No	1
+					2	1	0	0	3	15	15	4	3	
