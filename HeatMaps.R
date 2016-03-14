@@ -33,6 +33,7 @@ heatmap(df(c[2:5]), Rowv=FALSE)
 #load df
 data("mtcars")
 df<-mtcars 
+str(mtcars)
 #datamatrix ordered
 df<-df[order(rownames(df)),] 
 df<-as.matrix(df)  # check if df needs to be a matrix
@@ -62,3 +63,21 @@ maxContrib <-which.max(svd1$v[,1])
 distanceMatrix <- dist(df[,maxContrib])
 hclustering <- hclust(distanceMatrix)
 myplclust(hclustering,lab.col=unclass(df)) 
+
+#impute
+df<-read.csv("mtcars.csv")
+#datamatrix ordered
+df<-df[order(rownames(df)),]
+
+df2<-df
+df2<-df2[order(rownames(df)),]
+str(df2)
+indx <- which(is.na(df2), arr.ind = TRUE)
+df2[indx] <- rowMeans(df2, na.rm = TRUE)[indx[,"row"]]
+svd1 <- svd(scale(df))
+svd2 <- svd(scale(df2))
+par(mfrow=c(1,2))
+plot(svd1$v[,1],pch=19)
+plot(svd2$v[,1],pch=19)
+maxContrib1 <-which.max(svd1$v[,1])
+maxContrib2 <-which.max(svd2$v[,3])
