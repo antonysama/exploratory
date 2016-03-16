@@ -1,54 +1,40 @@
 #package to colour dendrograms
 install.packages("rafalib")
 library("rafalib")
+
 #load df
-data("mtcars")
-df<-mtcars   
-str(df)
-class(df)
-df<-transform(df, df[,c(2,3,4)] <- factor(df[,c(2,3,4,5)]))
+#data("mtcars")#df<-mtcars 
+df<-read.csv("mtcars.csv")
 df<-df[order(rownames(df)),] 
+
 #find distance, and hcluct
-hc<-hclust(dist(df[,c(2,3,4,5)])
+hc<-hclust(dist(df[,2]))
 hc<-hclust(dist(df))        
 plot(hc)
-myplclust(hc, labels = hc$labels, lab.col = unclass(df[,c(4)]),
-          hang = 0.1, xlab = "", sub = "")
-myplclust(hc,labels = hc$labels,
-          lab.col = rep(1,length(hc$labels),
-                        hang = 0.1, xlab = "", sub = ""))
-
-#picking datapackage
-data("npk")
-df<-npk     
-str(df)
-class(df)
-#make matrix, if not yet one , and sort rownames
-df<-as.numeric(df)
-df<-as.matrix(df)
-#heatmap
-heatmap(df(c[2:5]), Rowv=FALSE)
+myplclust(hc, labels = hc$labels)
+myplclust(hc, lab.col = hc$labels)
 
 #SVD
-#load df
-data("mtcars")
-df<-mtcars 
-str(mtcars)
+class(mtcars)
+df<-as.matrix(df) 
 #datamatrix ordered
 df<-df[order(rownames(df)),] 
-df<-as.matrix(df)  # check if df needs to be a matrix
+ # check if df needs to be a matrix
 
 #Patterns in rows and columns
+par(mfrow=c(1,3))
 image(t(df)[,nrow(df):1])
-plot(rowMeans(df),32:1,,xlab="Row Mean",ylab="Row",pch=19)
+plot(rowMeans(df),46:1,,xlab="Row Mean",ylab="Row",pch=19)
 plot(colMeans(df),xlab="Column",ylab="Column Mean",pch=19)
-#Components of the SVD - $u$ and $v$
 
 #Components of the SVD - $u$ and $v$
+library("rafalib")
+indx <- which(is.na(df), arr.ind = TRUE)
+df[indx] <- colMeans(df, na.rm = TRUE)[indx[,"col"]]
 svd1 <- svd(scale(df))
 par(mfrow=c(1,3))
 image(t(df)[,nrow(df):1])
-plot(svd1$u[,1],32:1,,xlab="Row",ylab="First left singular vector",pch=19)
+plot(svd1$u[,1],46:1,,xlab="Row",ylab="First left singular vector",pch=19)
 plot(svd1$v[,1],xlab="Column",ylab="First right singular vector",pch=19)
 
 #Components of the SVD - Variance explained
@@ -56,24 +42,31 @@ par(mfrow=c(1,2))
 plot(svd1$d,xlab="Column",ylab="Singular value",pch=19)
 plot(svd1$d^2/sum(svd1$d^2),xlab="Column",
      ylab="Prop. of variance explained",pch=19)
+
+#Relation to PCA
+pca1 <- prcomp(df,scale=TRUE)
+plot(pca1$rotation[,1],svd1$v[,1],pch=19,xlab="Principal Component 1",ylab="Right Singular Vector 1")
+abline(c(0,1))
+
 #max contribuor to variance
 plot(svd1$v[,1],pch=19)
 maxContrib <-which.max(svd1$v[,1])
 #new cluster with maxContributer
 distanceMatrix <- dist(df[,maxContrib])
-hclustering <- hclust(distanceMatrix)
-myplclust(hclustering,lab.col=unclass(df)) 
+hc<-hclust(distanceMatrix)
+heatmap(df[,maxContrib], Rowv=FALSE)
 
 #impute
+library("impute")
 df<-read.csv("mtcars.csv")
 #datamatrix ordered
 df<-df[order(rownames(df)),]
-
-df2<-df
-df2<-df2[order(rownames(df)),]
-str(df2)
-indx <- which(is.na(df2), arr.ind = TRUE)
-df2[indx] <- rowMeans(df2, na.rm = TRUE)[indx[,"row"]]
+df<-as.matrix(df)
+#df[10,10]<- NA#didnt work
+#impute.knn(df, k = 12, rowmax=0.8, colmax = 0.9)#didnt work
+svd1 <- svd(scale(df))
+indx <- which(is.na(df), arr.ind = TRUE)
+df[indx] <- colMeans(df, na.rm = TRUE)[indx[,"col"]]
 svd1 <- svd(scale(df))
 svd2 <- svd(scale(df2))
 par(mfrow=c(1,2))
