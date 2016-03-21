@@ -1,18 +1,39 @@
+#nextsteps: dendroram with highest SVD
+
 #package to colour dendrograms
 install.packages("rafalib")
+install.packages("data.table")
+install.packages("d3heatmap")
+install.packages("heatmap.2")
 library("rafalib")
+library("d3heatmap")
+library(data.table)
 
+list.files()
 #load df
-#data("mtcars")#df<-mtcars 
+data("mtcars")
+df<-mtcars 
 df<-read.csv("mtcars.csv")
-df<-df[order(rownames(df)),] 
+#key to create rownames
+row.names(df)<-df$X
+df$X=NULL
+df=data.table(df, keep.rownames=T)
+df$Community.name<-as.numeric(as.character(df$Community.name))
+str(df)
+df<-as.matrix(df)
+df<-df[order(rownames(df)),]
 
-#find distance, and hcluct
-hc<-hclust(dist(df[,2]))
+
+d3heatmap(df, scale = "column", colors = "Blues",
+          dendrogram = "none", Rowv = FALSE, Colv = FALSE)
+
+#find distance, and hclust
+#hc<-hclust(dist(df[,2]))
 hc<-hclust(dist(df))        
 plot(hc)
-myplclust(hc, labels = hc$labels)
-myplclust(hc, lab.col = hc$labels)
+myplclust(hc, labels=hc$labels,
+          lab.col = rep(1,length(hc$labels)))
+
 
 #SVD
 class(mtcars)
@@ -29,6 +50,7 @@ plot(colMeans(df),xlab="Column",ylab="Column Mean",pch=19)
 
 #Components of the SVD - $u$ and $v$
 library("rafalib")
+##impute for nas
 indx <- which(is.na(df), arr.ind = TRUE)
 df[indx] <- colMeans(df, na.rm = TRUE)[indx[,"col"]]
 svd1 <- svd(scale(df))
@@ -54,7 +76,12 @@ maxContrib <-which.max(svd1$v[,1])
 #new cluster with maxContributer
 distanceMatrix <- dist(df[,maxContrib])
 hc<-hclust(distanceMatrix)
-heatmap(df[,maxContrib], Rowv=FALSE)
+plot(hc)
+
+
+myplclust(hclust, labels = hclust$labels, 
+          lab.col = rep(1,length(hclust$labels)))
+
 
 #impute
 library("impute")
