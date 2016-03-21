@@ -1,5 +1,6 @@
 ##next find out what @data is spatial
 ## find muni shapefile
+#shp we are using:RURl, svillage, city, indian, town, village
 packages<-c("rio", "rgdal", "maptools", "tmap", "scales", "leaflet")
 lapply(packages, require, character.only = TRUE)
 #coal<- rio::import("mtcars.xlsx")
