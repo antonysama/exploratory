@@ -4,35 +4,29 @@
 install.packages("rafalib")
 install.packages("data.table")
 install.packages("d3heatmap")
-install.packages("heatmap.2")
-library("rafalib")
-library("d3heatmap")
-library(data.table)
+packages<-c("rafalib", "d3heatmap", "data.table")
+lapply(packages, require, character.only = TRUE)
 
-list.files()
+#list.files()
 #load df
-data("mtcars")
-df<-mtcars 
+#data("mtcars")
+#df<-mtcars 
 df<-read.csv("mtcars.csv")
 #key to create rownames
-row.names(df)<-df$X
-df$X=NULL
-df=data.table(df, keep.rownames=T)
-df$Community.name<-as.numeric(as.character(df$Community.name))
-str(df)
-df<-as.matrix(df)
+row.names(df)<-df$communities
+df$communities=NULL
+df$rn=NULL
 df<-df[order(rownames(df)),]
-
-
 d3heatmap(df, scale = "column", colors = "Blues",
           dendrogram = "none", Rowv = FALSE, Colv = FALSE)
 
 #find distance, and hclust
-#hc<-hclust(dist(df[,2]))
+#hc<-hclust
+dev.off()
+names(df)[2:16]<-c("popln", "pcnt.popln", "age", "child", "educ", "incm", "bldg", "prjct","non.ress", "res.ress", "non.rt", "res.rt", "s", "m", "l")
 hc<-hclust(dist(df))        
-plot(hc)
-myplclust(hc, labels=hc$labels,
-          lab.col = rep(1,length(hc$labels)))
+#plot(hc)
+myplclust(hc, labels=hc$labels, lab.col = df$incm)
 
 
 #SVD
@@ -49,7 +43,7 @@ plot(rowMeans(df),46:1,,xlab="Row Mean",ylab="Row",pch=19)
 plot(colMeans(df),xlab="Column",ylab="Column Mean",pch=19)
 
 #Components of the SVD - $u$ and $v$
-library("rafalib")
+#library("rafalib")
 ##impute for nas
 indx <- which(is.na(df), arr.ind = TRUE)
 df[indx] <- colMeans(df, na.rm = TRUE)[indx[,"col"]]
@@ -71,17 +65,17 @@ plot(pca1$rotation[,1],svd1$v[,1],pch=19,xlab="Principal Component 1",ylab="Righ
 abline(c(0,1))
 
 #max contribuor to variance
-plot(svd1$v[,1],pch=19)
-maxContrib <-which.max(svd1$v[,1])
+plot(svd1$v[,2],pch=19)
+maxContrib <-which.max(svd1$v[,2])
 #new cluster with maxContributer
-distanceMatrix <- dist(df[,maxContrib])
-hc<-hclust(distanceMatrix)
-plot(hc)
-
-
-myplclust(hclust, labels = hclust$labels, 
-          lab.col = rep(1,length(hclust$labels)))
-
+distanceMatrix <- dist(df[,5])
+distanceMatrix<-distanceMatrix[order(rownames(distanceMatrix)),]
+hmax<-hclust(distanceMatrix)
+plot(hmax)
+myplclust(hmax, labels=hmax$labels, lab.col = df$child)
+myplclust(hmax, labels=hmax$labels, lab.col = rep(1,length(df$child)))
+d3heatmap(distanceMatrix, scale = "column", colors = "Blues",
+           Rowv = FALSE, Colv = FALSE)
 
 #impute
 library("impute")
@@ -101,3 +95,5 @@ plot(svd1$v[,1],pch=19)
 plot(svd2$v[,1],pch=19)
 maxContrib1 <-which.max(svd1$v[,1])
 maxContrib2 <-which.max(svd2$v[,3])
+
+
