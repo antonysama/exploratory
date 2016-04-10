@@ -1,5 +1,6 @@
 #reference program
 # https://rstudio-pubs-static.s3.amazonaws.com/31867_8236987cf0a8444e962ccd2aec46d9c3.html#hierarchal-clustering
+install.packages("SnowballC")
 library("jsonlite")
 library("rjson")
 library("rafalib")
@@ -19,24 +20,25 @@ unzip("companies.zip")
 #save the folder to your C: drive and use the following code chunk:
 cname <- file.path("C:", "texts")   
 cname   
-dir(cname)  
-docs <- Corpus(DirSource(cname)
-filename2 <- "companies.json"
-Data2 <-fromJSON(file=filename2)
-#Data2<-unlist(jsonData2)
-
-#write csv
-write.csv(Data2, file="Data2.csv")
-docs <- Corpus("Data2.csv")
-Data2<-read.csv("Data2.csv")
-
-#cluster
-plot(hclust(dist(Data2[,2]), method =  "ward.D2"))
-#knn
-d<-dist(t(Data2))   
-kfit<- kmeans(d, 2)   
-clusplot(as.matrix(d), kfit$cluster, color=T, shade=T, labels=2, lines=0)
-#tm
-summary(Data2)
-docs <- Corpus(Data2) 
-docs <- tm_map(Data2, removeNumbers) 
+dir(cname) 
+library("tm")
+docs <- Corpus(DirSource(cname))
+docs <- tm_map(docs, removePunctuation) 
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, tolower)
+docs <- tm_map(docs, removeWords, stopwords("english"))
+docs <- tm_map(docs, stripWhitespace)
+docs <- tm_map(docs, PlainTextDocument) 
+dtm <- DocumentTermMatrix(docs)   
+dtm   
+inspect(dtm[1, 1:10])
+dim(dtm)
+#Iinvs matrix
+tdm <- TermDocumentMatrix(docs)  
+#  Start by removing sparse terms:   
+dtms <- removeSparseTerms(dtm, 0.1) # This makes a matrix that is 10% empty space, maximum. 
+#word freq
+freq[head(ord)]
+freq[tail(ord)]
+freq <- colSums(as.matrix(dtms))   
+freq 
