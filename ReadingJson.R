@@ -1,26 +1,34 @@
 #reference program
 # https://rstudio-pubs-static.s3.amazonaws.com/31867_8236987cf0a8444e962ccd2aec46d9c3.html#hierarchal-clustering
 install.packages("SnowballC")
-library("jsonlite")
-library("rjson")
-library("rafalib")
-library("cluster")
-library("fpc")
-library("tm")
 
-# create json files
+# either create & save json files
+require("jsonlite")
+data("crude")
+json<-toJSON(crude, pretty = T)
+cat(json, file="C:/texts/crude.json")
+
 json = '[{"name":"John","age":20, "sex": "M"}, {"name":"Martin","age":30, "sex":"t"},{"name":"Mrin","age":50, "sex":"F"}]]'
-Data2 = unlist(fromJSON(json))
-# dwnld json files
-url2<-paste0("http://jsonstudio.com/wp-content/uploads/2014/02/world_bank.zip")
-download.file(url2,dest="world_bank.zip") 
-unzip("world_bank.zip")
+cat(json, file="C:/texts/cat.json")
+# create & save another json file
+mylist <- list(a=1:5, b=letters, c="character string here")
+mylist_json <- toJSON(mylist)
+cat(mylist_json, file="C:/texts/mylist_json.json")
+#create a 3rd json file
+json3 = '[{"name":"Jean","age":23, "sex": "M"}, {"name":"Min","age":40, "sex":"t"},{"name":"Mr","age":54, "sex":"F"}]]'
+cat(json, file="C:/texts/cat3.json")
+
+# or dwnld json files
+url<-paste0("https://api.github.com/users/jtleek/repos")
+download.file(url,dest="repos.json") 
+unzip("enron.zip")
 # Create a file named "texts" where you'll keep your data.
 # Save the file to a particular place
 #save the folder to your C: drive and use the following code chunk:
 cname <- file.path("C:", "texts")   
-cname   
 dir(cname) 
+
+#now the txt management
 library("tm")
 docs <- Corpus(DirSource(cname))
 docs <- tm_map(docs, removePunctuation) 
@@ -29,18 +37,33 @@ docs <- tm_map(docs, tolower)
 docs <- tm_map(docs, removeWords, stopwords("english"))
 docs <- tm_map(docs, stripWhitespace)
 docs <- tm_map(docs, PlainTextDocument) 
-dtm <- DocumentTermMatrix(docs)   
-#  Start by removing sparse terms:   
-dtmss <- removeSparseTerms(dtm, 0.15) # This makes a matrix that is 15% empty space, maximum. 
+
+#create dtm and tdm
+dtm <- DocumentTermMatrix(docs) 
+tdm <- TermDocumentMatrix(docs)  
+
+#removing sparse terms:  
+tdmss <- removeSparseTerms(tdm, 0.15) # This makes a matrix that is 15% empty space, maximum. 
+dtmss <- removeSparseTerms(dtm, 0.15)
+
 #hclust
-library("cluster")   
-library("rafalib")
-d <- dist(t(dtmss))   
-reduced <- dtmss[sample(nrow(dtmss),80),]
-hc<-hclust(dist(t(dtmss)))  
-plot(hc, hang=-1)
+#reduced <- tdmss[sample(1:nrow(tdmss),nrow(tdmss)/5),]
+d <- dist(as.matrix(dtmss))
+plot(hclust(d))
+dev.off()
+
 #knn
 library("fpc")   
-d <- dist(t(dtmss), method="euclidian")   
-kfit <- kmeans(dist(t(dtmss)), centers= 3)   
-clusplot(as.matrix(d), kfit$cluster, color=T, shade=T, labels=2, lines=0)  
+d <- dist(as.matrix(tdmss), method="euclidian")   
+kfit <- kmeans(dist(tdmss), centers=3)
+clusplot(as.matrix(d), kfit$cluster, color=T, shade=T, labels=2, lines=0) 
+dev.off()
+
+# Levenshtein Distance
+d  <- adist(dtmss)
+rownames(d) <- dtmss
+hc <- hclust(as.dist(d))
+plot(hc)
+rect.hclust(hc,k=5)
+df <- data.frame(reduced,cutree(hc,k=5))
+dev.off()
