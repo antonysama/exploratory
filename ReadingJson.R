@@ -3,7 +3,7 @@
 install.packages("SnowballC")
 
 # either create & save json files
-require("jsonlite")
+require("RJSONIO")
 data("crude")
 json<-toJSON(crude, pretty = T)
 cat(json, file="C:/texts/crude.json")
@@ -19,8 +19,8 @@ json3 = '[{"name":"Jean","age":23, "sex": "M"}, {"name":"Min","age":40, "sex":"t
 cat(json, file="C:/texts/cat3.json")
 
 # or dwnld json files
-url<-paste0("https://api.github.com/users/jtleek/repos")
-download.file(url,dest="repos.json") 
+url<-paste0("http://json.org/example.html")
+download.file(url,dest="xampl.json") 
 unzip("enron.zip")
 # Create a file named "texts" where you'll keep your data.
 # Save the file to a particular place
@@ -48,21 +48,28 @@ dtmss <- removeSparseTerms(dtm, 0.15)
 
 #hclust
 #reduced <- tdmss[sample(1:nrow(tdmss),nrow(tdmss)/5),]
-d <- dist(as.matrix(dtmss))
-plot(hclust(d))
+d <- dist(t(tdmss), method = "euclidian")
+hc<-hclust(d, method="single")
+plot(hc, hang = -1)
+rect.hclust(hc,k=5)
+library("rafalib", lib.loc="C:/R-3.2.4/library")
+myplclust(hc, labels=hc$labels)
 dev.off()
 
 #knn
-library("fpc")   
-d <- dist(as.matrix(tdmss), method="euclidian")   
-kfit <- kmeans(dist(tdmss), centers=3)
+library("cluster")
+d <- dist(t(dtmss), method = "euclidian")   
+kfit <- kmeans(dist(dtmss), centers=5)
 clusplot(as.matrix(d), kfit$cluster, color=T, shade=T, labels=2, lines=0) 
+clara(as.matrix(d), 4, samples = 50)
+clarax
+
 dev.off()
 
 # Levenshtein Distance
 d  <- adist(dtmss)
 rownames(d) <- dtmss
-hc <- hclust(as.dist(d))
+hc <- hclust(as.dist(d), method="single")
 plot(hc)
 rect.hclust(hc,k=5)
 df <- data.frame(reduced,cutree(hc,k=5))
