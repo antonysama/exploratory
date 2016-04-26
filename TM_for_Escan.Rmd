@@ -1,0 +1,72 @@
+---
+title: "Scalable Text Mining for Large Escanning Datsets"
+output:
+  html_document:
+    keep_md: yes
+  pdf_document: default
+---
+
+##Synopsis: 
+
+##Harvested the original data of approximately 5500 e-scanned articles from IBM Watson to the E-scanning database (called Mongo), and saved in disk drive. Sandard text processing and cleaning ("the", "and", "ing", ";", ":" etc.,) simplified the ensuing  three types text analyses using R text mining  packages.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=F}
+library("tm")#CallEd the 2 packages to process the datA
+library ("SnowballC")  
+```
+
+```{r include=F}
+cname <- file.path("C:", "texts")# Showed R where the text is stored for analysis
+docs <- Corpus(DirSource(cname))# Create a Corpus for further analysis
+```
+
+
+## DATA PROCESSING
+
+```{r include=T}
+docs <- tm_map(docs, removePunctuation) 
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, removeWords, stopwords("english"))
+docs <- tm_map(docs, stripWhitespace) 
+docs <- tm_map(docs, stemDocument) #Removing common word endings (e.g., "ing", "es", "s") 
+dtm <- DocumentTermMatrix(docs) #create matrices that help the futher analysis
+dtmss <- removeSparseTerms(dtm, 0.06) # This makes a matrix that is 6% empty space, maximum. 
+```
+
+
+## ANALYSIS
+
+
+## 1. Most Frequent Words 
+
+```{r include=T}
+#org by freq
+freq <- colSums(as.matrix(dtm))  
+ord <- order(freq) 
+freq[tail(ord, n=10)] 
+```
+
+
+## 2. Word Cloud 
+
+```{r include=T}
+library("wordcloud")
+#100 most frequently used words.
+set.seed(142)   
+wordcloud(names(freq), freq, max.words=20, colors=brewer.pal(25, "Dark2"))
+```
+
+
+## 3. Clustering
+
+## Creating a cluster of n (here n=4) using Clara for Clustering Large Applications.  Compared to other partitioning methods such as pam, Clara can deal with much larger datasets. Clara is fully described in chapter 3 of Kaufman and Rousseeuw (1990) ``Finding Groups in Data''
+
+```{r include=T}
+library("cluster")
+d <- dist(t(dtmss), method = "euclidian")
+clara(as.matrix(d), 4, samples = 20, sampsize = 25)
+
+```
