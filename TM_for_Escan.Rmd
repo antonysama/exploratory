@@ -8,7 +8,7 @@ output:
 
 ##Synopsis: 
 
-##Harvested the original data of approximately 5500 e-scanned articles from IBM Watson to the E-scanning database (called Mongo), and saved in disk drive. Sandard text processing and cleaning ("the", "and", "ing", ";", ":" etc.,) simplified the ensuing  three types text analyses using R text mining  packages.
+##Harvested the original data of approximately 5500 e-scanned articles from Mongo, and saved in disk drive. Cut out ("the", "and", "ing", ";", ":" etc.,) and less frequent words, to help cluster based on proximity among words, using R text mining  packages.
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -34,21 +34,26 @@ docs <- tm_map(docs, stripWhitespace)
 docs <- tm_map(docs, stemDocument) 
 dtm <- DocumentTermMatrix(docs) 
 tdm <- TermDocumentMatrix(docs) 
+mystopwords <- findFreqTerms(tdm, 1, 20)#cut less frquent words
+mystpwrds <- paste(mystopwords, collapse = "|")
+tdm <- tdm[tdm$dimnames$Terms[!grepl(mystpwrds,tdm$dimnames$Terms)],]
 tdmss <- removeSparseTerms(tdm, 0.06)  
 ```
 
 
-## ANALYSIS
 
 
-## 2. Clustering
+## CLUSTERING
 
 ## Creating a hierrarchichal cluster dendrogram  using rafalib
 
 ```{r include=T}
-d<-dist(tdm,method = "euclidean")
-hc<-hclust(d, method="ward.D2")
+d<-dist(tdm)
+#rownames(d) <- tdm
+hc<-hclust(d)
+#plot(hc)
 library("rafalib")
 myplclust(hc, labels=hc$labels)
+rect.hclust(hc,k=5)
 
 ```
