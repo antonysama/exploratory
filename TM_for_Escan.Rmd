@@ -1,14 +1,12 @@
 ---
-title: "Scalable Text Mining for Large Escanning Datsets"
+title: "Text Mining Part. 2 (Hierrarchical Clustering)"
 output:
   html_document:
     keep_md: yes
   pdf_document: default
 ---
 
-##Synopsis: 
-
-##Harvested the original data of approximately 5500 e-scanned articles from Mongo, and saved in disk drive. Cut out ("the", "and", "ing", ";", ":" etc.,) and less frequent words, to help cluster based on proximity among words, using R text mining  packages.
+##Part 2 is just clustering
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -45,15 +43,15 @@ tdmss <- removeSparseTerms(tdm, 0.06)
 
 ## CLUSTERING
 
-## Creating a hierrarchichal cluster dendrogram  using rafalib
+## Creating a hierrarchichal cluster dendrogram  
 
 ```{r include=T}
 d<-dist(tdm)
 #rownames(d) <- tdm
 hc<-hclust(d)
-#plot(hc)
-library("rafalib")
-myplclust(hc, labels=hc$labels)
-rect.hclust(hc,k=5)
+plot(hc)
+#library("rafalib")
+#myplclust(hc, labels=hc$labels)
+rect.hclust(hc,k=5)#k can be any value that you'd like to skin the cat :)
 
 ```
