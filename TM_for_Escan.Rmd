@@ -1,12 +1,14 @@
 ---
-title: "Text Mining Part. 2 (Hierrarchical Clustering)"
+title: "Scalable Text Mining for Large Escanning Datsets"
 output:
   html_document:
     keep_md: yes
   pdf_document: default
 ---
 
-##Part 2 is just clustering
+##Synopsis: 
+
+##Harvested the original data of approximately 5500 e-scanned articles from IBM Watson to the E-scanning database (called Mongo), and saved in disk drive. Sandard text processing and cleaning ("the", "and", "ing", ";", ":" etc.,) simplified the ensuing  three types text analyses using R text mining  packages.
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -32,9 +34,12 @@ docs <- tm_map(docs, stripWhitespace)
 docs <- tm_map(docs, stemDocument) 
 dtm <- DocumentTermMatrix(docs) 
 tdm <- TermDocumentMatrix(docs) 
-mystopwords <- findFreqTerms(tdm, 1, 20)#cut less frquent words
+mystopwords <- findFreqTerms(tdm, 1, 10)#cut less frquent words
 mystpwrds <- paste(mystopwords, collapse = "|")
 tdm <- tdm[tdm$dimnames$Terms[!grepl(mystpwrds,tdm$dimnames$Terms)],]
+morestpwds<-c("alchemyapi", "said", "will")
+morestpwds<-paste(morestpwds, collapse="|")
+tdm <- tdm[tdm$dimnames$Terms[!grepl(morestpwds,tdm$dimnames$Terms)],]
 tdmss <- removeSparseTerms(tdm, 0.06)  
 ```
 
@@ -43,15 +48,15 @@ tdmss <- removeSparseTerms(tdm, 0.06)
 
 ## CLUSTERING
 
-## Creating a hierrarchichal cluster dendrogram  
+## Creating a hierrarchichal cluster dendrogram  using rafalib
 
 ```{r include=T}
 d<-dist(tdm)
 #rownames(d) <- tdm
 hc<-hclust(d)
-plot(hc)
-#library("rafalib")
-#myplclust(hc, labels=hc$labels)
-rect.hclust(hc,k=5)#k can be any value that you'd like to skin the cat :)
+#plot(hc)
+library("rafalib")
+myplclust(hc, labels=hc$labels)
+rect.hclust(hc,k=3)
 
 ```
