@@ -1,0 +1,16 @@
+install.packages("dplyr")
+require("dplyr")
+df<-read.csv("br3.csv")
+#get only food processors
+df1<-df[grep("^311", df$NAT.INDUSTRIES),]
+#get towns & cities I want
+df2<-df1[grep("Calgary|Chestermere|Wheatland| Okotoks|Cochrane|Airdrie| Rocky View|Medicine Hat|Lethbridge|Lloydminster|Edmonton", df1$PROV.CSD, ignore.case = TRUE),]
+# slightly less than the mid point of firm size class
+names(df2)[5:24]<-c(1,6,13,23,37,73,123,174,224,274,347,447,748,1247,1747,2247, 2747,3498,4498,5000)
+#reduce to CSD name and size classes
+df3<-df2[, c(1,5:24)]
+#sum up by CSD & size
+df4<-df3%>% 
+  group_by(PROV.CSD)%>% 
+  summarise_each(funs(sum))
+write.csv(df4,"df4b.csv")
