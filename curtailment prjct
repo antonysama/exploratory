@@ -13,6 +13,7 @@
 # combining above:
   dt<-read.table("data2.csv", TRUE) 
   library(plyr)
-  df1<-ddply(dt,~name,summarise,mean=mean(tail(sort(val),5)))
-  df2<-dt %>% group_by(name)%>% summarize(mean(tail(sort(val),5)))
+  n=6 #or other
+  df1<-ddply(dt,~name,summarise,mean=mean(tail(sort(val),n)))
+  df2<-dt %>% group_by(name)%>% summarize(mean(tail(sort(val),n)))
   table(df1 == df2, useNA = 'ifany') 
