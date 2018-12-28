@@ -1,0 +1,18 @@
+# most helpful reading today
+  dt<-read.table("data2.csv", TRUE)
+# summarising by category
+  dt %>% group_by(name)%>% summarize(mean(top)) #needs dplyr
+  ddply(dt,~name,summarise,mean=mean(top)) #plyr
+# verify if two methods are true
+   table(df1 == df2, useNA = 'ifany')
+# make a function
+  colMax <- function(data) sapply(data, max, na.rm = TRUE)
+# selcts top N
+  a <- c(1:100)
+  tail(sort(a),5)
+# combining above:
+  dt<-read.table("data2.csv", TRUE) 
+  library(plyr)
+  df1<-ddply(dt,~name,summarise,mean=mean(tail(sort(val),5)))
+  df2<-dt %>% group_by(name)%>% summarize(mean(tail(sort(val),5)))
+  table(df1 == df2, useNA = 'ifany') 
