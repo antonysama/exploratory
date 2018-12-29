@@ -17,3 +17,10 @@
   df1<-ddply(dt,~name,summarise,mean=mean(tail(sort(val),n)))
   df2<-dt %>% group_by(name)%>% summarize(mean(tail(sort(val),n)))
   table(df1 == df2, useNA = 'ifany') 
+# subtract -bc from column representing mean of a
+  library(tidyverse)
+  b=10000
+  bc=b*0.15898*31
+  df1<-df1 %>% mutate_at(.vars = vars(contains("mean")), 
+                 .funs = funs(ifelse(. > 0, . -bc, .)))
+                 
