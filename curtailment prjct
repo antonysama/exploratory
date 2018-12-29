@@ -23,4 +23,9 @@
   bc=b*0.15898*31
   df1<-df1 %>% mutate_at(.vars = vars(contains("mean")), 
                  .funs = funs(ifelse(. > 0, . -bc, .)))
-                 
+# productn. limit
+  "abc"<-sum(df2$`mean(tail(sort(val), n))`)
+  curt=325000
+  f=1-curt*0.15898*31/(abc)
+  df2<-df2 %>% mutate_at(.vars = vars(contains("mean")), 
+                       .funs = funs(ifelse(. > 0, . *f, .)))
