@@ -29,3 +29,6 @@
   f=1-curt*0.15898*31/(abc)
   df2<-df2 %>% mutate_at(.vars = vars(contains("mean")), 
                        .funs = funs(ifelse(. > 0, . *f, .)))
+# to duplicate and save, rspctvly
+  df1['limit']= df1['mean']
+  write.csv(df2, file="df2.csv")
