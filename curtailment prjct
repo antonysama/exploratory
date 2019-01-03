@@ -11,24 +11,27 @@
   a <- c(1:100)
   tail(sort(a),5)
 # combining above:
+  install.packages("dplyr")
+  library(dplyr)
   dt<-read.table("data2.csv", TRUE) 
-  library(plyr)
-  n=6 #or other
-  df1<-ddply(dt,~name,summarise,mean=mean(tail(sort(val),n)))
+  n=1 #or other
+  #df1<-ddply(dt,~name,summarise,mean=mean(tail(sort(val),n)))
   df2<-dt %>% group_by(name)%>% summarize(mean(tail(sort(val),n)))
-  table(df1 == df2, useNA = 'ifany') 
+  #table(df1 == df2, useNA = 'ifany') 
 # subtract -bc from column representing mean of a
+  install.packages("tidyverse")
   library(tidyverse)
   b=10000
   bc=b*0.15898*31
-  df1<-df1 %>% mutate_at(.vars = vars(contains("mean")), 
+  df3<-df2 %>% mutate_at(.vars = vars(contains("mean")), 
                  .funs = funs(ifelse(. > 0, . -bc, .)))#option:.vars = vars(var2)
 # productn. limit
-  "abc"<-sum(df2$`mean(tail(sort(val), n))`)
+  "a_bc"<-sum(df3$`mean(tail(sort(val), n))`)
   curt=325000
-  f=1-curt*0.15898*31/(abc)
-  df2<-df2 %>% mutate_at(.vars = vars(contains("mean")), 
-                       .funs = funs(ifelse(. > 0, . *f, .)))
+  f=1-curt*0.15898*31/(a_bc)
+  df4<-df3 %>% mutate_at(.vars = vars(contains("mean")), 
+                       .funs = funs(ifelse(. > 0, . *f, .)))#m3/mo
+  df5<-df4*0.2#bpd                     
 # to duplicate and save, rspctvly
   df1['limit']= df1['mean']
   write.csv(df2, file="df2.csv")
