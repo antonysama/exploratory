@@ -10,10 +10,13 @@
 # selcts top N
   a <- c(1:100)
   tail(sort(a),5)
-# combining above:
+# load data
   install.packages("dplyr")
   library(dplyr)
   dt<-read.table("data2.csv", TRUE) 
+# filter out the month(s) don't need
+  dt2<- dt[!(dt$y=="201710"),]
+# Find max n pdn:
   n=1 #or other
   #df1<-ddply(dt,~name,summarise,mean=mean(tail(sort(val),n)))
   df2<-dt %>% group_by(name)%>% summarize(mean(tail(sort(val),n)))
@@ -25,10 +28,10 @@
   bc=b*0.15898*31
   df3<-df2 %>% mutate_at(.vars = vars(contains("mean")), 
                  .funs = funs(ifelse(. > 0, . -bc, .)))#option:.vars = vars(var2)
-# productn. limit
+# productn. limit and factor
   "a_bc"<-sum(df3$`mean(tail(sort(val), n))`)
-  curt=325000
-  f=1-curt*0.15898*31/(a_bc)
+  pdn_lmt=14156338 #from Roberto's worksheets in m3/mo
+  f=pdn_lmt/(a_bc)
   df4<-df3 %>% mutate_at(.vars = vars(contains("mean")), 
                        .funs = funs(ifelse(. > 0, . *f, .)))#m3/mo
   df5<-df4*0.2#bpd                     
