@@ -1,13 +1,13 @@
-# 1. Load data 
+# 1. Load data for all the operators 
 install.packages("data.table")        
 library(data.table)     
 dt<-fread("data.csv") 
 
-# 2. Top years and month(s) not needed
+# 2. Choose the number of top prodn. years. As well, choose the month(s) not needed
 n=1 
 dt<- dt[!(dt$y=="201710"),]
 
-# 3. Find the "a-term"
+# 3. Find the "a-term" (a vector)
 install.packages("dplyr") 
 library(dplyr)
 a<-dt %>% group_by(opratr)%>% summarize(mean(tail(sort(value),n)))
@@ -15,7 +15,7 @@ names(a) <- c("oprtr", "m3m")
 ## an alternative  to find "a" with package plyr:
 ##df1<-ddply(dt,~oprtr,summarise,mean=mean(tail(sort(value),n)))
 
-# 4. Find "a-bc"
+# 4. Find "a-bc" vector
 install.packages("tidyverse")
 library(tidyverse)
 b=10000
@@ -24,7 +24,7 @@ df3<-a %>% mutate_at(.vars = vars(contains("m3m")),
                        .funs = funs(ifelse(. > 0, . -bc, .)))#option:.vars = vars(var2)
 "a_bc"<-sum(df3$m3m)
 
-# 5. Find production limits
+# 5. Find the multiplier scalar, and the production limits vector
 "curt"=14156338
 f<-curt/a_bc
 pdn<-df3 %>% mutate_at(.vars = vars(contains("m3m")), 
