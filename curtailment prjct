@@ -1,40 +1,35 @@
-# most helpful reading today
-  dt<-read.table("data2.csv", TRUE)
-# summarising by category
-  dt %>% group_by(name)%>% summarize(mean(top)) #needs dplyr
-  ddply(dt,~name,summarise,mean=mean(top)) #plyr
-# verify if two methods are true
-   table(df1 == df2, useNA = 'ifany')
-# make a function
-  colMax <- function(data) sapply(data, max, na.rm = TRUE)
-# selcts top N
-  a <- c(1:100)
-  tail(sort(a),5)
-# load data
-  install.packages("dplyr")
-  library(dplyr)
-  dt<-read.table("data2.csv", TRUE) 
-# filter out the month(s) don't need
-  dt2<- dt[!(dt$y=="201710"),]
-# Find max n pdn:
-  n=1 #or other
-  #df1<-ddply(dt,~name,summarise,mean=mean(tail(sort(val),n)))
-  df2<-dt %>% group_by(name)%>% summarize(mean(tail(sort(val),n)))
-  #table(df1 == df2, useNA = 'ifany') 
-# subtract -bc from column representing mean of a
-  install.packages("tidyverse")
-  library(tidyverse)
-  b=10000
-  bc=b*0.15898*31
-  df3<-df2 %>% mutate_at(.vars = vars(contains("mean")), 
-                 .funs = funs(ifelse(. > 0, . -bc, .)))#option:.vars = vars(var2)
-# productn. limit and factor
-  "a_bc"<-sum(df3$`mean(tail(sort(val), n))`)
-  pdn_lmt=14156338 #from Roberto's worksheets in m3/mo
-  f=pdn_lmt/(a_bc)
-  df4<-df3 %>% mutate_at(.vars = vars(contains("mean")), 
-                       .funs = funs(ifelse(. > 0, . *f, .)))#m3/mo
-  df5<-df4*0.2#bpd                     
-# to duplicate and save, rspctvly
-  df1['limit']= df1['mean']
-  write.csv(df2, file="df2.csv")
+# 1. Load data 
+install.packages("data.table")        
+library(data.table)     
+dt<-fread("data.csv") 
+
+# 2. Top years and month(s) not needed
+n=1 
+dt<- dt[!(dt$y=="201710"),]
+
+# 3. Find the "a-term"
+install.packages("dplyr") 
+library(dplyr)
+a<-dt %>% group_by(opratr)%>% summarize(mean(tail(sort(value),n)))
+names(a) <- c("oprtr", "m3m")
+## an alternative  to find "a" with package plyr:
+##df1<-ddply(dt,~oprtr,summarise,mean=mean(tail(sort(value),n)))
+
+# 4. Find "a-bc"
+install.packages("tidyverse")
+library(tidyverse)
+b=10000
+bc=b*0.15898*31
+df3<-a %>% mutate_at(.vars = vars(contains("m3m")), 
+                       .funs = funs(ifelse(. > 0, . -bc, .)))#option:.vars = vars(var2)
+"a_bc"<-sum(df3$m3m)
+
+# 5. Find production limits
+"curt"=14156338
+f<-curt/a_bc
+pdn<-df3 %>% mutate_at(.vars = vars(contains("m3m")), 
+                       .funs = funs(ifelse(. > 0, . *f, .)))
+pdn$bpm=pdn$m3m*6.28
+pdn$bpd=pdn$m3m*0.2
+write.csv(pdn, file="pdn.csv")
+
