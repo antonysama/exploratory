@@ -31,5 +31,7 @@ pdn<-df3 %>% mutate_at(.vars = vars(contains("m3m")),
                        .funs = funs(ifelse(. > 0, . *f, .)))
 pdn$bpm=pdn$m3m*6.28
 pdn$bpd=pdn$m3m*0.2
+pdn$a=a
+pdn$a=a-bc
 write.csv(pdn, file="pdn.csv")
 
