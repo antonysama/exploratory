@@ -25,12 +25,13 @@ df3<-a %>% mutate_at(.vars = vars(contains("m3m")),
 "a_bc"<-sum(df3$m3m)
 
 # 5. Find the multiplier scalar, and the production limits vector
-"curt"=14156338
-f<-curt/a_bc
+"limit"=14156338 
+f<-limit/a_bc
 pdn<-df3 %>% mutate_at(.vars = vars(contains("m3m")), 
                        .funs = funs(ifelse(. > 0, . *f, .)))
 # 6. Key Stats
 pdn$bpd=pdn$m3m*0.2246
+pdn$abpd<-a[,2]*0.2246
 pdn$curtm3m=df3 %>% mutate_at(.vars = vars(contains("m3m")), 
                             .funs = funs(ifelse(. > 0, . *(1-f), .)))
 pdn$curtbpd=pdn$curtm3m[,2]*0.2246
