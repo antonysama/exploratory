@@ -1,0 +1,17 @@
+# Prep
+install.packages("data.table")        
+library(data.table)
+dt<-fread("Energy_forecasts.csv") 
+install.packages("plotly")
+library(plotly)
+p <- plot_ly(dt, x = ~Yr, y=~TJ, z= ~Type, color = ~Type, colors = c("grey20", "orange", "blue"),
+             size = ~TJ, sizes=c(600,2500), hoverinfo= ~Ty_cm)
+
+# Set up API credentials: https://plot.ly/r/getting-started
+Sys.setenv("plotly_username"="antonysama")
+Sys.setenv("plotly_api_key"="Ftm2MM6PKBIqidFcXXlD")
+
+# Create a shareable link to your chart
+api_create(p, filename = "Energy_forecats")
+
+#Outputs: •	https://plot.ly/~antonysama/1/#plot 
