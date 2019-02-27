@@ -1,0 +1,14 @@
+#packages
+packages<-c("rgeocodio", "rio")
+lapply(packages, install.packages, character.only = TRUE)
+lapply(packages, library, character.only = TRUE)
+#API key
+api <- readLines("google_api.txt") # Text file with the API key
+register_google(key = api)
+#clean
+df<-import("uso.csv")
+df<-df[c("id", "calle_1", "num")]
+df2<-df[c(1:100),]
+df$new<-paste(df$num, df$calle_1)
+#geocode
+geocode("492 Old Connecticut Path, Framingham, MA",output = c("latlon", "latlona", "more", "all"))
