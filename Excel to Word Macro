@@ -1,0 +1,123 @@
+Sub XW()
+    Dim excelApp As Object
+    Dim excelWorkbook As Object
+    Dim wordApp As Object
+    Dim wordDoc As Object
+    
+    ' Set up Excel object
+    Set excelApp = CreateObject("Excel.Application")
+    Set excelWorkbook = excelApp.Workbooks.Open("C:\Users\antony.samarawickrem\OneDrive - Government of Alberta\Play\EIA.xlsx")
+    
+    ' Define an array to store the data from 20 different Excel cells
+    Dim dataArray(1 To 33) As Variant
+    
+    ' Copy data from Excel cells to the array
+    dataArray(1) = Round(excelApp.Sheets("dtaWeekly").Range("bt307").Value / 1000, 2)
+    dataArray(2) = Round(excelApp.Sheets("dtaWeekly").Range("bt308").Value / 1000, 2)
+    dataArray(3) = Round(excelApp.Sheets("dtaWeekly").Range("bt310").Value * 100, 0)
+    dataArray(4) = excelApp.Sheets("dtaWeekly").Range("j70").Value
+    dataArray(5) = excelApp.Sheets("dtaWeekly").Range("k70").Value
+    dataArray(6) = excelApp.Sheets("dtaWeekly").Range("l70").Value
+    dataArray(7) = excelApp.Sheets("dtaWeekly").Range("m70").Value
+    dataArray(8) = excelApp.Sheets("dtaWeekly").Range("n70").Value
+    dataArray(9) = excelApp.Sheets("dtaWeekly").Range("ed508").Value
+    dataArray(10) = Round(excelApp.Sheets("USPetrBalance").Range("d8").Value, 2)
+    dataArray(11) = Round(excelApp.Sheets("USPetrBalance").Range("g8").Value * 100, 2)
+    dataArray(12) = Round(excelApp.Sheets("USPetrBalance").Range("d7").Value, 2)
+    dataArray(13) = Round(excelApp.Sheets("USPetrBalance").Range("g7").Value * 100, 2)
+    dataArray(14) = Round(excelApp.Sheets("USPetrBalance").Range("t66").Value, 2)
+    dataArray(15) = Round(excelApp.Sheets("USPetrBalance").Range("y66").Value, 0)
+    dataArray(16) = Round(excelApp.Sheets("USPetrBalance").Range("r66").Value, 2)
+    dataArray(17) = Round(excelApp.Sheets("USPetrBalance").Range("w66").Value, 0)
+    dataArray(18) = Round(excelApp.Sheets("USPetrBalance").Range("c31").Value, 2)
+    dataArray(19) = Round(excelApp.Sheets("USPetrBalance").Range("c35").Value, 2)
+    dataArray(20) = Round(excelApp.Sheets("USPetrBalance").Range("c36").Value * 100, 0)
+    dataArray(21) = Round(excelApp.Sheets("USPetrBalance").Range("d21").Value, 2)
+    dataArray(22) = Round(excelApp.Sheets("USPetrBalance").Range("c21").Value, 2)
+    dataArray(23) = excelApp.Sheets("USPetrBalance").Range("d18").Value
+    dataArray(24) = excelApp.Sheets("USPetrBalance").Range("c18").Value
+    dataArray(25) = Round(excelApp.Sheets("USPetrBalance").Range("d24").Value, 2)
+    dataArray(26) = Round(excelApp.Sheets("USPetrBalance").Range("c24").Value, 2)
+    dataArray(27) = Round(excelApp.Sheets("USPetrBalance").Range("e24").Value * 100, 2)
+    dataArray(28) = Round(excelApp.Sheets("USPetrBalance").Range("g27").Value * 100, 2)
+    dataArray(29) = Round(excelApp.Sheets("USPetrBalance").Range("c27").Value, 2)
+    dataArray(30) = Round(excelApp.Sheets("USPetrBalance").Range("e27").Value * 100, 2)
+    dataArray(31) = Round(excelApp.Sheets("USPetrBalance").Range("d27").Value, 2)
+    dataArray(32) = Round(excelApp.Sheets("USPetrBalance").Range("c14").Value, 2)
+    dataArray(33) = Round(excelApp.Sheets("USPetrBalance").Range("d14").Value, 2)
+    ' Close Excel workbook
+    excelWorkbook.Close False
+    excelApp.Quit
+    
+    ' Set up Word object
+    Set wordApp = CreateObject("Word.Application")
+    Set wordDoc = wordApp.Documents.Open("C:\Users\antony.samarawickrem\OneDrive - Government of Alberta\Play\EIA - Copy.docx")
+    
+    ' Define an array of bookmark names corresponding to the data in dataArray
+    Dim bookmarkNames(1 To 33) As String
+    bookmarkNames(1) = "bt307"
+    bookmarkNames(2) = "bt308"
+    bookmarkNames(3) = "bt310"
+    bookmarkNames(4) = "j70"
+    bookmarkNames(5) = "k70"
+    bookmarkNames(6) = "l70"
+    bookmarkNames(7) = "m70"
+    bookmarkNames(8) = "n70"
+    bookmarkNames(9) = "ed508"
+    bookmarkNames(10) = "d8"
+    bookmarkNames(11) = "g8"
+    bookmarkNames(12) = "d7"
+    bookmarkNames(13) = "g7"
+    bookmarkNames(14) = "t66"
+    bookmarkNames(15) = "y66"
+    bookmarkNames(16) = "r66"
+    bookmarkNames(17) = "w66"
+    bookmarkNames(18) = "c31"
+    bookmarkNames(19) = "c35"
+    bookmarkNames(20) = "c36"
+    bookmarkNames(21) = "d21"
+    bookmarkNames(22) = "c21"
+    bookmarkNames(23) = "d18"
+    bookmarkNames(24) = "c18"
+    bookmarkNames(25) = "d24"
+    bookmarkNames(26) = "c24"
+    bookmarkNames(27) = "e24"
+    bookmarkNames(28) = "g27"
+    bookmarkNames(29) = "c27"
+    bookmarkNames(30) = "e27"
+    bookmarkNames(31) = "d27"
+    bookmarkNames(32) = "c14"
+    bookmarkNames(33) = "d14"
+    ' Loop through the arrays and paste the data to the corresponding bookmarks in the Word document
+    Dim i As Integer
+    For i = 1 To 33
+        PasteToBookmark wordDoc, dataArray(i), bookmarkNames(i)
+    Next i
+    
+    ' Save and close the Word document
+    wordDoc.Save
+    wordDoc.Close False
+    
+    ' Release Word object from memory
+    Set wordDoc = Nothing
+    Set wordApp = Nothing
+End Sub
+
+Sub PasteToBookmark(doc As Object, data As Variant, bookmarkName As String)
+    On Error Resume Next
+    Dim pasteRange As Object
+    Set pasteRange = doc.Bookmarks(bookmarkName).Range
+    On Error GoTo 0
+    
+    If pasteRange Is Nothing Then
+        ' Bookmark doesn't exist, create it at the end of the document
+        Set pasteRange = doc.Content
+        doc.Bookmarks.Add bookmarkName, pasteRange
+    End If
+    
+    ' Clear existing content in the bookmark
+    pasteRange.Delete
+    
+    ' Paste data to the specified range in the Word document
+    pasteRange.Text = data
+End Sub
